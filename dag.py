@@ -40,16 +40,16 @@ download_raw_data = download_raw_data(YEAR, MONTH, YESTERDAY)
 clean_data = BashOperator(
     task_id="spark_job_clean",
     # TODO : compléter le spark submit
-    class_name = "\"Main\""
+    class_name = "\"Clean\""
     jar_path = "hdfs:///jars/g9/scala-clean-0.1.jar"
-    bash_command=f"spark-submit --deploy-mode cluster --class {class_name} --master yarn-cluster {jar_path}",
+    bash_command=f"spark-submit --deploy-mode cluster --class {class_name} --master yarn-cluster {jar_path} hdfs:///data/g9/raw/data-{year}-{month}-{day}.csv hdfs:///data/g9/clean/",
     dag=dag
 )
 
 transform_data = BashOperator(
     task_id="spark_job_transform",
     # TODO : compléter le spark submit
-    class_name = "\"Main\""
+    class_name = "\"Jointure\""
     jar_path = "hdfs:///jars/g9/scala-jointure-0.1.jar"
     bash_command=f"spark-submit --deploy-mode cluster --class {class_name} --master yarn-cluster {jar_path}",
     dag=dag
